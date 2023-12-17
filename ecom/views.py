@@ -382,7 +382,8 @@ def customer_address_view(request):
                     product_id_in_cart=product_ids.split('|')
                     products=models.Product.objects.all().filter(id__in = product_id_in_cart)
                     for p in products:
-                        total=total+p.price
+                        # total=total+p.price
+                        total = request.COOKIES['totalPrice']
 
             response = render(request, 'ecom/payment.html',{'total':total})
             response.set_cookie('email',email)

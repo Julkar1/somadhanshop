@@ -84,6 +84,7 @@ written By : Julkar
           <th>Image</th>
           <th>Price</th>
           <th>Description</th>
+          <th>Quantity</th>
           <th>Action</th>
 
         </tr>
@@ -94,9 +95,9 @@ written By : Julkar
       <tr>
         <td> {{p.name}}</td>
         <td> <img src="{% static p.product_image.url %}" alt="Profile Pic" height="50px" width="50px" /></td>
-        <td>৳ {{p.price}}</td>
+        <td>৳<input type="number" disabled id="price" min="0" value={{p.price}}> </td>
         <td>{{p.description}}</td>
-
+        <td><input type="number" id="quantity" name="quantity" min="1" value="1"></td>
         <td><a class="btn btn-danger btn-xs" href="{% url 'remove-from-cart' p.id  %}?next_page={{request.path}}"><span class="glyphicon glyphicon-trash"></span></a></td>
 
       </tr>
@@ -110,12 +111,43 @@ written By : Julkar
 </div>
 <br><br><br>
 <div style="text-align: center;">
-  <button class="btn btn-danger btn-lg">Total ৳{{total}}</button>
+  Total ৳ <button class="btn btn-danger btn-lg" id="totalPrice" >{{total}}</button>
   <a href="/customer-address"><button class="btn btn-success btn-lg" ><span>Purchase </span></button></a>
 </div>
 
 
 <br><br><br><br><br>
+
+<script>
+  // Function to calculate and update total price
+  function updateTotalPrice() {
+    // Get quantity and price values
+    var quantity = parseFloat(document.getElementById('quantity').value) || 0;
+    var price = parseFloat(document.getElementById('price').value) || 0;
+
+    // Calculate total price
+    var totalPrice = quantity * price;
+
+    // Update the total price on the page
+    document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+
+    setCookie("totalPrice", totalPrice.toFixed(2), 7);
+  }
+
+  // Add event listeners for input changes
+  document.getElementById('quantity').addEventListener('input', updateTotalPrice);
+  document.getElementById('price').addEventListener('input', updateTotalPrice);
+
+  function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + value + expires + "; path=/";
+  }
+</script>
 <!--
 developed By : Julkar
 -->
